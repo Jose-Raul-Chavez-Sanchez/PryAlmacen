@@ -1,0 +1,407 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Presentacion;
+
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import Negocio.EProductos;
+import javax.swing.JOptionPane;
+import Modelos.Productos;
+import static Presentacion.ExportExcelUtil.createCaption;
+import static Presentacion.ExportExcelUtil.createThead;
+import static Presentacion.ExportExcelUtil.createBody;
+import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+
+public class FrmListadoProductos extends javax.swing.JFrame implements IFormActive{
+    
+    DefaultTableModel defaultTable =new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+    /**
+     * Creates new form FrmListadoProductos
+     */
+    public FrmListadoProductos() {
+        initComponents();
+        this.setLocationRelativeTo(this);
+        this.setResizable(false);
+        
+   
+        this.defaultTable.addColumn("Id");
+        this.defaultTable.addColumn("Categoría");
+        this.defaultTable.addColumn("Laboratorio");
+        this.defaultTable.addColumn("Producto");
+        this.defaultTable.addColumn("Marca");
+        this.defaultTable.addColumn("Und. Medida");
+        this.defaultTable.addColumn("Stock Mínimo");
+        this.defaultTable.addColumn("Stock");
+        this.defaultTable.addColumn("Fecha Vto");
+        this.defaultTable.addColumn("Precio");
+        this.defaultTable.addColumn("Estado");
+        this.tblProductos.setModel(defaultTable);
+        
+        TableColumnModel columnModel = tblProductos.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(15);
+        columnModel.getColumn(1).setPreferredWidth(50);
+        columnModel.getColumn(2).setPreferredWidth(50);
+        columnModel.getColumn(3).setPreferredWidth(180);
+        columnModel.getColumn(4).setPreferredWidth(50);
+        columnModel.getColumn(5).setPreferredWidth(50);
+        columnModel.getColumn(6).setPreferredWidth(60);
+        columnModel.getColumn(7).setPreferredWidth(30);
+        columnModel.getColumn(8).setPreferredWidth(50);
+        columnModel.getColumn(9).setPreferredWidth(30);
+        columnModel.getColumn(10).setPreferredWidth(50);
+        tblProductos.setRowHeight(25);
+        
+        loadTable();
+        
+        Border line = BorderFactory.createLineBorder(Color.DARK_GRAY);
+        Border empty = new EmptyBorder(0, 10, 0, 0);
+        CompoundBorder border = new CompoundBorder(line, empty);
+        txtSearch.setBorder(border);
+    }
+    
+    @Override
+    public final void loadTable(){
+        try{
+            
+            for (int i=this.defaultTable.getRowCount()-1;i>=0;i--){
+                this.defaultTable.removeRow(i);
+            }
+            
+            Productos clsProductos = new Productos();
+            ArrayList arrayList = clsProductos.getAll();
+            
+            for (int i = 0; i < arrayList.size(); i++) {
+                EProductos prod = (EProductos)arrayList.get(i);
+                this.defaultTable.addRow(new Object[]{});
+                this.defaultTable.setValueAt(prod.getId(), i, 0);
+                this.defaultTable.setValueAt(prod.getCategoria().getDescripcion(), i, 1);
+                this.defaultTable.setValueAt(prod.getLaboratorio().getDescripcion(), i, 2);
+                this.defaultTable.setValueAt(prod.getDescripcion(), i, 3);
+                this.defaultTable.setValueAt(prod.getMarca().getDescripcion(), i, 4);
+                this.defaultTable.setValueAt(prod.getUndMedida().getDescripcion(), i, 5);
+                this.defaultTable.setValueAt(prod.getStockMinimo(), i, 6);
+                this.defaultTable.setValueAt(prod.getStock(), i, 7);
+                this.defaultTable.setValueAt(prod.getFechaVto(), i, 8);
+                this.defaultTable.setValueAt(prod.getPrecioVenta(), i, 9);
+                this.defaultTable.setValueAt(prod.getEstado(), i, 10);
+            }
+            
+            EColorTableCell foreColor = new EColorTableCell();
+            foreColor.setColumnIndex(10);
+            tblProductos.getColumnModel().getColumn(10).setCellRenderer(foreColor);
+            
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex.toString(), Module.titleMessage, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtSearch = new javax.swing.JTextField();
+        btnNuevo = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblProductos = new javax.swing.JTable();
+        btnExportarExcel = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Mantenimiento de Productos");
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel1.setText("BUSCAR");
+
+        txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
+        btnNuevo.setBackground(new java.awt.Color(70, 70, 255));
+        btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevo.setText("NUEVO");
+        btnNuevo.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        tblProductos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tblProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "CATEGORIA", "LABORATORIO", "PRODUCTO", "MARCA", "UND MEDIDA", "STOCK MIN.", "STOCK", "FECHA VTO", "PRECIO", "ESTADO"
+            }
+        ));
+        tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblProductos);
+
+        btnExportarExcel.setBackground(new java.awt.Color(30, 152, 61));
+        btnExportarExcel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnExportarExcel.setForeground(new java.awt.Color(255, 255, 255));
+        btnExportarExcel.setText("EXPORTAR A EXCEL");
+        btnExportarExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarExcelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1097, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtSearch)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnExportarExcel)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 36, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExportarExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        EForm formActive = Module.formActive;
+        formActive.setCaller(this);
+        Module.id = 0;
+        
+        FrmProductos formProd = new FrmProductos();
+        formProd.setVisible(true);
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        // TODO add your handling code here:
+        try{
+            
+            String txtNombre = this.txtSearch.getText().trim();
+            if(txtNombre.equals("")){
+                loadTable();
+                return;
+            }
+            
+            for (int i=this.defaultTable.getRowCount()-1;i>=0;i--){
+                this.defaultTable.removeRow(i);
+            }
+            
+            Productos clsProductos = new Productos();
+            ArrayList arrayList = clsProductos.searchByName(txtNombre);
+            
+            for (int i = 0; i < arrayList.size(); i++) {
+                EProductos prod = (EProductos)arrayList.get(i);
+                this.defaultTable.addRow(new Object[]{});
+                this.defaultTable.setValueAt(prod.getId(), i, 0);
+                this.defaultTable.setValueAt(prod.getCategoria().getDescripcion(), i, 1);
+                this.defaultTable.setValueAt(prod.getLaboratorio().getDescripcion(), i, 2);
+                this.defaultTable.setValueAt(prod.getDescripcion(), i, 3);
+                this.defaultTable.setValueAt(prod.getMarca().getDescripcion(), i, 4);
+                this.defaultTable.setValueAt(prod.getUndMedida().getDescripcion(), i, 5);
+                this.defaultTable.setValueAt(prod.getStockMinimo(), i, 6);
+                this.defaultTable.setValueAt(prod.getStock(), i, 7);
+                this.defaultTable.setValueAt(prod.getFechaVto(), i, 8);
+                this.defaultTable.setValueAt(prod.getPrecioVenta(), i, 9);
+                this.defaultTable.setValueAt(prod.getEstado(), i, 10);
+            }
+            
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex.toString(), Module.titleMessage, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_txtSearchKeyReleased
+
+    private void tblProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductosMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount()==2){
+            int id = (int) tblProductos.getValueAt(tblProductos.getSelectedRow(), 0);
+            Module.id = id;
+            EForm formActive = Module.formActive;
+            formActive.setCaller(this);
+            
+            FrmProductos formProd = new FrmProductos();
+            formProd.setVisible(true);
+        }
+    }//GEN-LAST:event_tblProductosMouseClicked
+
+    private void btnExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarExcelActionPerformed
+        // TODO add your handling code here:
+        try{
+                       
+            List<LinkedHashMap<String, String>> listProd = new ArrayList<>();
+            
+            for (int i = 0; i < this.defaultTable.getRowCount(); i++){
+                LinkedHashMap<String, String> map = new LinkedHashMap<>();
+                map.put("categoria", this.defaultTable.getValueAt(i, 1).toString());
+                map.put("laboratorio", this.defaultTable.getValueAt(i, 2).toString());
+                map.put("producto", this.defaultTable.getValueAt(i, 3).toString());
+                map.put("undmedida", this.defaultTable.getValueAt(i, 5).toString());
+                map.put("stockminimo", this.defaultTable.getValueAt(i, 6).toString());
+                map.put("stock", this.defaultTable.getValueAt(i, 7).toString());
+                map.put("fechavto", this.defaultTable.getValueAt(i, 8).toString());
+                map.put("precio", this.defaultTable.getValueAt(i, 9).toString());
+                map.put("estado", this.defaultTable.getValueAt(i, 10).toString());
+                listProd.add(map);
+            }
+            
+            String fileName = "Reporte-de-stock.xls";
+            String titleReport = "Reporte General de Productos";
+            String sheetName = "Reporte - Stock";
+            String filePath = "C:\\ReportesJava";
+            
+            File directory = new File(filePath);
+            if (!directory.exists()) {
+                if (directory.mkdirs()) {
+                    System.out.println("Directorio creado "+filePath);
+                }
+            }
+            
+            String[] alignText = {"C", "C", "L", "C", "C", "C", "C", "R", "C"};
+            String[] columnsHead = {"Categoría", "Laboratorio", "Producto", "Und. Medida", "Stock Mínimo", "Stock", "Fecha de Vto", "Precio de Venta", "Estado"};
+            int[] columnsWidth = {5000, 5000, 10500, 3000, 3000, 5000, 3000, 3500, 3000};
+            
+            ExportExcelUtil.alignText = alignText;
+            
+            try (HSSFWorkbook workbook = new HSSFWorkbook ()) {
+                HSSFSheet sheet = workbook.createSheet (sheetName);
+                sheet.setGridsPrinted(false);
+                sheet.setPrintGridlines(false);
+                sheet.setDisplayGridlines(false);
+                
+                createCaption(workbook, sheet, titleReport, 8);
+                createThead(workbook, sheet, columnsHead, columnsWidth);
+                createBody(workbook, sheet, listProd);
+                
+                String fullPath = filePath + File.separator + fileName;
+                try (FileOutputStream outputStream = new FileOutputStream(new File(fullPath))) {
+                    workbook.write(outputStream);
+                    outputStream.close();
+                    workbook.close();
+                }
+            }
+            
+            int dialogConfirm = JOptionPane.showConfirmDialog(null, "Excel exportado con éxito. \n¿Desea abrir el archivo exportado?", Module.titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if(dialogConfirm == 0){
+                Runtime.getRuntime().exec("cmd /c start C:\\\"ReportesJava\"\\"+fileName);
+            }
+            
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex.toString(), Module.titleMessage, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExportarExcelActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrmListadoProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FrmListadoProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrmListadoProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmListadoProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FrmListadoProductos().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExportarExcel;
+    private javax.swing.JButton btnNuevo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblProductos;
+    private javax.swing.JTextField txtSearch;
+    // End of variables declaration//GEN-END:variables
+}
